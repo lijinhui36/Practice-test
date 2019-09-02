@@ -1,0 +1,271 @@
+<div>	
+	<div class="category-manage">
+		<div class="btns-div">
+			<button type="button" class="btn btn-success" id='to-add2'>新增</button>
+			<button type="button" class="btn btn-danger" id='to-delete2'>批量删除</button>
+		</div>
+		<div class="table-div">
+			<table class="table table-bordered text-center table-hover">
+				<thead>
+					<tr>
+						<th class="text-center"><button class="checkAll">全/反选</button></th>
+						<th class="text-center">编号</th>
+						<th class="text-center">id</th>
+						<th class="text-center">名称</th>
+						<th class="text-center">所属栏目</th>
+						<th class="text-center">描述</th>
+						<th class="text-center">操作</th>	
+					</tr>
+				</thead>
+				<tbody>
+					<!-- <tr>
+						<td>
+							<input type="checkbox"/>
+						</td>
+
+						<td>名称</td>
+						<td>父栏目</td>
+						<td>描述</td>
+						<td>
+							<i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+							<i class="fa fa-trash-o"  aria-hidden="true"></i>
+						</td>
+					</tr> -->
+				</tbody>
+			</table>
+		</div>
+		<div class="modal fade" id="myModal">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button class="btn btn-default close" data-dismiss="modal">&times;</button>
+						<span class="modal-title">栏目</span>
+					</div>
+					<div class="modal-body">
+						<form action="" class="form-horizontal">
+							<input type="hidden" id="hidId">
+							<div class="form-group">
+								<label for="username" class="col-md-2 control-label width">栏目名称：</label>
+								<div class="col-sm-9">
+									<input id="username" type="text" class="form-control">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="username" class="col-md-2 control-label width">/所属栏目：</label>
+								<div class="col-sm-9">
+									<select class="form-control category-parent" style="width: 418px;">
+										<option value="">请选择</option>
+								    </select>
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="username" class="col-md-2 control-label width">描述：</label>
+								<div class="col-sm-9">
+									<textarea class="form-control" name="textarea" id="" cols="30" rows="6"></textarea>
+								</div>
+							</div>
+						</form>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-default" data-dismiss="modal">取消</button>
+						<button class="btn btn-primary" id="to-save2">保存</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script>
+		// console.log(getAjax);
+		// console.log($);
+		// console.log($('.category-manage tbody'));
+		// 写category的js
+
+        //追加所有数据
+    	var state = {
+			// 当前页数
+			currentPage:1,
+			// 每页条数
+			pageSize:10,
+			// 总页数
+			totalPage:0,
+			// 表格数据
+			tableData:[],
+			// 表格总数据
+			tableTotalData:[],
+			// 新增或者修改操作类型
+			option:'新增',
+			// 当前修改的对象
+			currentObj:{},
+		};
+	    findAllCategory();
+		function findAllCategory(){
+			myAjax('/manager/category/findAllCategory','get',null,function(res){
+				// console.log(res.data);
+				//遍历数据，追加到tbody
+				var str='';
+				var i=0;
+				if(res.data&&res.data.length>0){
+					res.data.forEach(function(item){
+						// console.log(item.comment);
+					i++;
+			     	str+= `
+						<tr>
+							<td>
+								<input id='`+item.id+`' type="checkbox"/>
+							</td>
+							<td>
+								`+i+`
+							</td>
+							<td>`+item.id+`</td>
+							<td>`+item.name+`</td>
+							<td id="`+(item.parent?item.parent.id:'')+`">`+(item.parent?item.parent.name:'-')+`</td>
+							<td>`+item.comment+`</td>
+							<td>
+								<i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+								<i class="fa fa-trash-o" aria-hidden="true"></i>
+							</td>
+						</tr>
+						`;
+					// $('.category-manage tbody').append(str);
+					// console.log($str);
+					});
+					$('.category-manage tbody').html(str);
+				}
+				var optionStr = '';
+				res.data.forEach(function(item){
+					optionStr += `<option value="`+item.id+`">`+item.name+`</option>`;
+				});
+		        $('.category-parent').append(optionStr);
+			},function(error){
+				console.log(error); 
+			});	
+		}
+
+
+		//新增数据和修改数据	
+		function saveOrUpdateCategory(obj){
+			// console.log(obj);
+			myAjax('/manager/category/saveOrUpdateCategory','post',obj,function(res){
+			    findAllCategory();
+		    },function(error){
+			    console.log('失败了');
+		    })
+		}
+		//提交
+		$('.right-content').on('click','#to-save2',function(event){
+			var idt=$('#hidId').val();
+			// console.log(idt);
+			var categoryname = $('.modal [type=text]').val();
+			var category = $('.modal option:selected').val();
+			// console.log(category);
+			var description = $('.modal textarea').val();
+			// var id=$('.modal input').attr('id');
+			// var parentId=
+			// console.log(category);			
+			if(idt==''){
+				
+				// 获取数据，封装成对象，传递给后台								
+				if(categoryname&&category&&description){
+					saveOrUpdateCategory({
+						name:categoryname,
+						parentId:category,
+						comment:description,
+						no:123
+					});
+					$('#myModal').modal('hide');
+				}else{
+					alert('请输入完整的信息');
+				}
+			}
+			else{
+				// var trds = $('tbody [id='+idt+']').parent().parent().children('td');
+				// var categoryname=trds.eq(2).text();
+	        	// var category=trds.eq(3).val();
+	        	// var description=trds.eq(4).text();
+       	        // $('#'+ids).attr('id',)        	
+				if(categoryname&&category&&description){
+					saveOrUpdateCategory({
+						name:categoryname,
+						parentId:category,
+						comment:description,
+						no:123,
+						id:idt
+					});
+					$('#myModal').modal('hide');
+				}else{
+					alert('请输入完整的信息');
+				}        	
+			}				
+		});
+
+		//新增按钮
+		$('.right-content').on('click','#to-add2',function(){
+			state.option = '新增';
+			$('.modal-title').text(state.option+'栏目信息');
+			$('.modal [type=text]').val('');
+			$('.modal textarea').val('');
+	        $('.modal select').val('');
+			$('#myModal').modal('show');
+		});
+
+		//编辑按钮
+		$('.right-content').on('click','.fa-pencil-square-o',function(){
+			state.option = '编辑';
+			$('.modal-title').text(state.option+'栏目信息');
+			var ids=$(this).parent('td').siblings().find('input').attr('id');
+            var name=$(this).parent('td').parent('tr').children('td').eq(3).text();
+            console.log(name);
+            var category=$(this).parent('td').parent('tr').children('td').eq(4).attr('id');
+            console.log(category);
+            var comment=$(this).parent('td').parent('tr').children('td').eq(5).text();
+            console.log(comment);
+            // console.log(ids)           
+			$('.modal [type=text]').val(name);
+			$('.modal select').val(category);
+			$('.modal textarea').val(comment);
+			$('#hidId').val(ids);
+        	$('#myModal').modal('show');       	
+	    });
+
+		//单个删除
+		function deleteCategoryById(obj){
+			myAjax('/manager/category/deleteCategoryById','GET',obj,function(res){
+				// 重新获取数据，更新DOM
+				findAllCategory();
+			},function(error){
+				console.log(error);
+			});
+		}
+		$('.right-content').on('click','.fa-trash-o',function(){
+			var ids=$(this).parent('td').siblings().find('input').attr('id');
+			console.log(ids);
+			deleteCategoryById({id:ids});
+		});
+
+
+		//批量删除
+		function batchDeleteCategory(obj){
+			myAjax('/manager/category/batchDeleteCategory','POST',obj,function(res){
+				findAllCategory();
+			},function(error){
+				console.log('失败了');
+			});
+		}
+		$('.right-content').on('click','#to-delete2',function(event){
+			var inputs = $('tbody input');
+			// console.log(inputs);
+			inputs = Array.prototype.slice.call(inputs,0);
+			// console.log(inputs);
+			// 过滤选中的checkbox,获取要批量删除的id
+			var ids = inputs.filter(function(item){
+				return item.checked;
+			}).map(function(item){
+				return item.id;
+			});
+			console.log(ids);
+			//进行批量删除
+			batchDeleteCategory({ids:ids.join()});	
+		});
+   
+	</script>
+</div>

@@ -1,0 +1,335 @@
+<div>
+	<div class="category-man">
+		<div class="btns-div form-inline">
+			<select class="form-control category-parent" style="width: 200px;">
+				<!-- <option id="7868">前选择</option> -->
+		    </select>
+			<button type="button" class="btn btn-success" id='to-add1'>新增</button>
+			<button type="button" class="btn btn-danger" id='to-delete1'>批量删除</button>
+		</div>
+		<div class="table-div">
+			<table class="table table-bordered text-center table-hover">
+				<thead> 
+					<tr>
+						<th class="text-center"><button class="checkAll">全/反选</button></th>
+						<th class="text-center">编号</th>
+						<th class="text-center">文章标题</th>
+						<th class="text-center">所属栏目</th>
+						<th class="text-center">排列方式</th>
+						<th class="text-center">作者</th>
+						<th class="text-center">发布时间</th>
+						<th class="text-center">阅读次数</th>
+						<th class="text-center">操作</th>	
+					</tr>
+				</thead>
+				<tbody>
+					<!-- <tr>
+						<td>
+							<input type="checkbox"/>
+						</td>
+						<td class="text-center">文章标题</td>
+						<td class="text-center">所属栏目</td>
+						<td class="text-center">排列方式</td>
+						<td class="text-center">作者</td>
+						<td class="text-center">发布时间</td>
+						<td class="text-center">阅读次数</td>
+						<td class="text-center">
+							<i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+							<i class="fa fa-trash-o" aria-hidden="true"></i>
+						</td>
+					</tr> -->
+				</tbody>
+			</table>
+		</div>
+		<div class="modal fade" id="myModal">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button class="btn btn-default close" data-dismiss="modal">&times;</button>
+						<span class="modal-title">发布资讯</span>
+					</div>
+					<div class="modal-body">
+						<form action="" class="form-horizontal">
+							<input type="hidden" id="hideId">
+							<div class="form-group">
+								<label for="username" class="col-md-2 control-label width">文章标题：</label>
+								<div class="col-sm-9">
+									<input id="username" type="text" class="form-control">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="username" class="col-md-2 control-label width">所属栏目：</label>
+								<div class="col-sm-9">
+									<select class="form-control category-parent" style="width: 418px;">
+										<!-- <option id=''>请选择</option> -->
+								    </select>
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="username" class="col-md-2 control-label width">列表样式：</label>
+								<div class="col-sm-9">
+									<label calss="list-one">
+										<input type="radio" data-list='style-one' value="style-one" name='infolist'>
+										<img src="./images/style-one.jpg" alt="">
+									</label>
+									<label class="list-two">
+										<input type="radio" data-list='style-two' value="style-two" name='infolist'>
+										<img src="./images/style-two.jpg" alt="">
+									</label>
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="username" class="col-md-2 control-label width">正文：</label>
+								<div class="col-sm-9">
+									<textarea class="form-control" name="textarea" id="" cols="30" rows="6"></textarea>
+								</div>
+							</div>
+						</form>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-default" data-dismiss="modal">取消</button>
+						<button class="btn btn-primary" id="to-save1">发布</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script>
+		var state = {
+			// 当前页数
+			currentPage:1,
+			// 每页条数
+			pageSize:10,
+			// 总页数
+			totalPage:0,
+			// 表格数据
+			tableData:[],
+			// 表格总数据
+			tableTotalData:[],
+			// 新增或者修改操作类型
+			option:'新增',
+			// 当前修改的对象
+			currentObj:{},
+		};
+
+		//获取select数据
+		findAllCategory();
+		function findAllCategory(){
+			myAjax('/manager/category/findAllCategory','get',null,function(res){
+				// console.log(res.data);
+				//遍历数据，追加到tbody			
+				var optionStr = '';
+				res.data.forEach(function(item){
+					optionStr += `<option value="`+item.id+`" id="`+item.id+`">`+item.name+`</option>`;
+				});
+		        $('.category-parent').append(optionStr);
+		        $('.btns-div option:eq(0)').prop('selected',true);
+		        idg=$('.btns-div option:selected').attr('id');	
+	    		findArticle(idg);
+
+			},function(error){
+				console.log(error); 
+			});	
+		}
+
+		$('.right-content').on('change','.category-man select',function(){
+			idg=$('.btns-div option:selected').attr('id');
+			console.log(idg);
+			 findArticle(idg);
+		});
+		
+		//获取所有数据
+		function findArticle(idg){			
+			// console.log(idg,'------');	
+			myAjax('/manager/article/findArticle?page=0&pageSize=1000&categoryId='+idg+'','get',null,function(res){
+				// console.log(res.data.list);
+				//遍历数据，追加到tbody						
+				var str='';
+				// function formatDate(){
+				// 	var date = new Date();
+				// 	var year = date.getFullYear();
+				// 	var month = date.getMonth()+1;
+				// 	month = month<10?'0'+month:month;
+				// 	var day = date.getDate();
+				// 	day = day<10?'0'+day:day;
+				// 	var hours = date.getHours();
+				// 	hours = hours<10?'0'+hours:hours;
+				// 	var minutes = date.getMinutes();
+				// 	minutes = minutes<10?'0'+minutes:minutes;
+				// 	var seconds = date.getSeconds();
+				// 	seconds = seconds<10?'0'+seconds:seconds;
+				// 	// 2019-07-23 09:40:30
+				// 	return year+'-'+month+'-'+day+' '+hours+':'+minutes+':'+seconds;
+				// }
+				// var time=formatDate();
+				if(res.data.list&&res.data.list.length>0){
+					var i=0;
+					res.data.list.forEach(function(item){
+						// console.log(item.comment);
+					// console.log(item.parent);
+					i++;
+			     	str+= `
+						<tr>
+							<td>
+								<input id='`+item.id+`' type="checkbox"/>
+							</td>
+							<td>
+								`+i+`
+							</td>
+							<td>`+item.title+`</td>
+							<td id="`+(item.category?item.category.id:'-')+`">`+(item.category?item.category.name:'-')+`</td>
+							<td>`+item.liststyle+`</td>
+							<td class="text-center">-</td>
+							<td class="text-center">`+(item.publishtime?item.publishtime:'-')+`</td>
+							<td class="text-center">`+(item.readtimes?item.readtimes:'-')+`</td>
+							<td>
+								<i class="fa fa-pencil-square-o" data-content=`+item.content+` aria-hidden="true"></i>
+								<i class="fa fa-trash-o" aria-hidden="true"></i>
+							</td>
+
+						</tr>
+						`;
+					// $('.category-manage tbody').append(str);
+					// console.log($str);
+					});					
+				}
+				$('.category-man tbody').html(str);
+			},function(error){
+				console.log('失败了1'); 
+			});
+
+		}
+
+		//新增数据
+		function saveOrUpdateArticle(obj,idg){
+			myAjax('/manager/article/saveOrUpdateArticle','post',obj,idg,function(res){
+				findArticle(idg);			
+			},function(error){
+				console.log('失败了');
+			})
+		}
+
+		// var idg=$('.btns-div option:selected').attr('id');
+		// console.log(idg,"&&&&&&");
+		//新增按钮
+		$('.right-content').on('click','#to-add1',function(){
+			state.option = '发布';
+			$('.modal-title').text(state.option+'资讯');
+			$('.modal [type=text]').val('');
+			$('.modal textarea').val('');
+	        $('.modal select').val('');
+			$('#myModal').modal('show');
+		});
+
+		//编辑按钮
+		$('.right-content').on('click','.fa-pencil-square-o',function(){
+			state.option = '编辑';
+			$('.modal-title').text(state.option+'资讯');
+			var ids=$(this).parent('td').siblings().find('input').attr('id');
+			console.log(ids);
+            var name=$(this).parent('td').parent('tr').children('td').eq(2).text();
+            console.log(name);
+            var category=$(this).parent('td').parent('tr').children('td').eq(3).attr('id');
+            console.log(category);
+            var comment=$(this).parent('td').parent('tr').children('td').eq(4).text();
+            console.log(comment);
+            var content=$(this).attr('data-content');
+            // console.log(ids)           
+			$('.modal [type=text]').val(name);
+			$('.modal select').val(category);
+			// $('.form-group .list-one input').attr('checked',true);
+			$('.modal textarea').val(content);
+			$('#hideId').val(ids);
+        	$('#myModal').modal('show');       	
+	    });
+
+	    //发布按钮
+	    $('.right-content').on('click','#to-save1',function(event){
+			var idf=$('#hideId').val();
+			// console.log(idt);
+			var title = $('.modal [type=text]').val();
+			var category = $('.modal select').val();
+			// console.log(category);
+			var liststyle=$('.form-group label input:checked').attr('data-list');
+			console.log(liststyle);
+			var description = $('.modal textarea').val();
+			console.log(description);
+			// 新增			
+			if(idf==''){				
+				// 获取数据，封装成对象，传递给后台								
+				if(title&&category&&description&&liststyle){
+					var obj = {
+						title:title,
+						categoryId:category,
+						liststyle:liststyle,
+						content:description
+					};
+					console.log(obj,"********");
+					saveOrUpdateArticle(obj);
+					$('#myModal').modal('hide');
+				}else{
+					alert('请输入完整的信息');
+				}
+			}
+			//修改
+			else{      	
+				if(title&&category&&description&&liststyle){
+					var obj = {
+						title:title,
+						categoryId:category,
+						liststyle:liststyle,
+						content:description,
+						id:idf
+					};
+					console.log(obj,"--------");
+					saveOrUpdateArticle(obj);
+					$('#myModal').modal('hide');
+				}else{
+					alert('请输入完整的信息');
+				}        	
+			}				
+		});
+
+		//单个删除
+		function deleteArticleById(obj){
+			myAjax('/manager/article/deleteArticleById','GET',obj,function(res){
+				// 重新获取数据，更新DOM
+				findArticle(idg);
+			},function(error){
+				console.log(error);
+			});
+		}
+		$('.right-content').on('click','.fa-trash-o',function(){
+			var ids=$(this).parent('td').siblings().find('input').attr('id');
+			console.log(ids);
+			deleteArticleById({id:ids});
+		});
+
+		//批量删除
+		function batchDeleteArticle(obj){
+			myAjax('/manager/article/batchDeleteArticle','POST',obj,function(res){
+				findArticle(idg);
+			},function(error){
+				console.log('失败了');
+			});
+		}
+		$('.right-content').on('click','#to-delete1',function(event){
+			var inputs = $('tbody input');
+			// console.log(inputs);
+			inputs = Array.prototype.slice.call(inputs,0);
+			// console.log(inputs);
+			// 过滤选中的checkbox,获取要批量删除的id
+			var ids = inputs.filter(function(item){
+				return item.checked;
+			}).map(function(item){
+				return item.id;
+			});
+			console.log(ids);
+			//进行批量删除
+			batchDeleteArticle({ids:ids.join()});	
+		});
+
+	    //帅选
+	    
+	</script>
+</div>

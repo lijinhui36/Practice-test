@@ -1,0 +1,310 @@
+*{
+	margin:0px;
+	padding:0px;
+}
+.top{
+	height: 50px;
+	width: 100%;
+	background: white;
+}
+.top-1{
+	width: 17%;
+	height: 50px;
+	background: #3d556d;
+	display: inline-block;
+}
+.top-1 img{
+	height: 40px;
+	width: 40px;
+	margin:5px 20px;
+	border:none;
+	float:left;
+}
+.top-1 span{
+	color:white;
+	line-height: 48px;
+	font-size:20px;
+	font-family: '微软雅黑';
+}
+.top-2{
+	width:83%;
+	height: 50px;
+	background: #ccc;
+	float:right;
+	font-size: 26px;
+}
+.left img{
+	height: 16px;
+	width: 16px;
+	margin:12px 10px 12px 20px;
+	float:left;
+}
+.left ul{
+	background: white; 
+	width:17%;
+	border-right:1px solid #ccc;
+	position: absolute;
+	top:90px;
+}
+.left ul li{
+	height:40px; 
+	border-bottom:1px solid #ccc;
+	line-height: 40px;
+	cursor: pointer;
+}
+.left ul li:hover{
+	background: #eee;
+}
+.left ul li span{
+	float:right;
+	margin-right:15px;
+}
+.left ul li span i{
+	font-size: 18px;
+}
+.left-2{
+	width: 17%;
+	height: 80%;
+	position:absolute;
+	top:50px;
+	left:0px;
+	background: #fff;
+	border:1px solid #ccc;
+	z-index: -10;
+}
+.right{
+	/*background: #ccc;*/
+	display: inline-block;
+	position:absolute;
+	top:50px;
+	right:0px;
+	width: 83%;
+	height: 80%;
+}
+.btns-div{
+	margin: 15px;
+}
+#to-add,#to-add1,#to-add2{
+	background: #3d556d;
+}
+.table-div{
+	margin:15px;
+}
+.table-div td i:first-child{
+	color:#3d556d;
+	cursor: pointer;
+	margin: 1px;
+}
+.table-div td i{
+	color:#c9302c;
+	cursor: pointer;
+	margin: 1px;
+}
+/*select.btn-select{
+	width: 100px;
+}*/
+/*.badge{
+	height:2px;
+	width: 2px;
+}*/
+.top-2-1{
+	margin:12px 18px;
+}
+.top-2-2{
+	margin:12px;
+	position:relative;
+}
+.top-2-2 span{
+	background: #c9302c;
+	position:absolute;
+	top:0px;
+	right: -5px;
+	font-size: 8px;
+}
+.right{
+	height: 80%;
+	width: 83%;
+	float:right;
+	position: absolute;
+	top:50px;
+	background: #eee;
+	overflow:scroll;
+}
+.list-user ul{
+	list-style: none;
+}
+.list-user ul li{
+	width:30%;
+	height: 400px;
+	background: #fff;
+	margin:0px 1.5% 20px;
+	box-shadow: 3px 3px 3px #ccc;
+	font-size:20px;
+	line-height: 35px;
+	border:1px solid #eee;
+	float:left;
+	border-radius: 5px;
+}
+.picture div{
+    width: 150px;
+    height: 150px;
+    margin: 10px auto;
+    /*border-radius: 50%;*/
+}
+.picture div img{
+	width: 150px;
+    height: 150px;
+    border-radius: 50%;
+}
+.list-user span{
+	display: block;
+}
+.form{
+	width: 85%;
+	height: 50%;
+	margin:0 auto;
+	overflow:auto;
+	margin-top:10px; 
+}
+.form-left,.form-right{
+	font-size: 15px;
+	display: inline-block;
+}
+.form>div{
+	width: 90%;
+	margin:0 auto;
+}
+.form-left{
+	width: 40%;
+	float:left;
+}
+.form-right{
+	width: 60%;
+	float:left;
+}
+.onoff{
+	display: inline-block;
+	overflow: hidden;
+	height: 24px;
+	width: 80px;
+	border:1px solid #ccc;
+	margin-top:5px;
+	position: relative;
+	border-radius: 5px;
+	cursor: pointer;
+}
+.onoff>div{
+	position: absolute;
+	top:0px;
+	right:0px;
+	width: 120px;
+	height: 24px;
+/*	border:1px solid red;*/
+}
+.onoff-1,.onoff-2{
+	width:40px;
+	height: 24px;
+	font-size: 14px;
+	text-align: center;
+	line-height: 22px;
+
+}
+.onoff-1{
+	background: #337ab7;
+	position: absolute;
+	left:0px;
+	top:0px;
+	color:#fff;
+	opacity: 1;
+}
+.onoff-2{
+	background: #eee;
+	position: absolute;
+	right:0px;
+	top:0px;
+	color:#000;
+}
+.checkbox{
+	z-index: -10;
+}
+.width{
+	width:17%;
+	padding-right:0;
+}
+table{
+	background: white;
+}
+.home{
+	width:100%;
+	height: auto;
+	padding:10px;
+	/*overflow: auto;*/
+}
+.right-top{
+	width: 95%;
+	margin:0 auto;
+}
+.row{
+	margin:0 -15px;
+}
+.total{
+	overflow: hidden;
+	padding: 10px;
+	border-radius: 5px;
+	margin-top: 10px;
+	background: white;
+}
+.icon{
+	width: 35px;
+	height: 35px;
+	border-radius: 50%;
+	text-align: center;
+	margin-left: 10px;
+	float:left;
+	background-color:#63b919;
+}
+.icon i{
+	/*width: 30px;
+	height: 30px;*/
+	font-size:22px;
+	color:white;
+	line-height: 34px;
+}
+.num{
+	margin-left:20px;
+	float:left;
+}
+.num span{
+	font-size: 12px;
+    line-height: 18px;
+}
+.num small{
+	display: block;
+	font-size:10px;
+}
+.modal img{
+	width:190px;
+	height: 80px;
+}
+.modal label{
+	position: relative;
+	margin-left:15px;
+
+}
+.modal input[type=radio]{
+	position: absolute;
+	top:8px;
+	left:-14px;
+}
+thead .checkAll{
+	background: #fff;
+	box-shadow: none;
+	border:1px solid #ccc;
+	font-size: 12px;
+	width: 45px;
+	height: 23px;
+	border-radius: 3px;
+}
+thead .checkAll:active{
+	background: #eee;
+}

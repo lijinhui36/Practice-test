@@ -1,0 +1,224 @@
+<div>
+	<div class="home">
+		<div>
+			<div class="right-top">
+				<div class="row">
+					<div class="col-md-3">
+						<div class="total">
+							<div class="icon">
+								<i class="fa fa-leaf" aria-hidden="true"></i>
+							</div>
+							<div class="num">
+								<span>99.99%</span>
+								<small>SERVER</small>
+							</div>
+						</div>
+						<div class="total">
+							<div class="icon">
+								<i class="fa fa-leaf" aria-hidden="true"></i>
+							</div>
+							<div class="num">
+								<span>99.99%</span>
+								<small>SERVER</small>
+							</div>
+						</div>
+						<div class="total">
+							<div class="icon">
+								<i class="fa fa-leaf" aria-hidden="true"></i>
+							</div>
+							<div class="num">
+								<span>99.99%</span>
+								<small>SERVER</small>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div id="container" style="height:185px;margin-top:10px;"></div>
+					</div>
+					<div class="col-md-3">
+						<!-- <div style="margin-top:10px;height: 88px;"></div> -->
+						<div id="container1" style="margin-top:10px;height: 88px;"></div>
+						<div style="margin-top:10px;height: 88px;background: white">
+							<div style="width: 110px;height: 88px;display: inline-block;"></div>
+							<div id="container2" style="height: 88px;width: 120px;display: inline-block;"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script>
+		var chart = Highcharts.chart('container', {
+			title: {
+				text: '2010 ~ 2016 年注册看点资讯人数情况'
+			},
+			subtitle: {
+				text: ''
+			},
+			yAxis: {
+				title: {
+					text: '注册人数'
+				}
+			},
+			legend: {
+				layout: 'vertical',
+				align: 'right',
+				verticalAlign: 'middle'
+			},
+			plotOptions: {
+				series: {
+					label: {
+						connectorAllowed: false
+					},
+					pointStart: 2010
+				}
+			},
+			series: [{
+				name: '青年',
+				data: [43934, 52503, 57177, 69658, 97031, 119931, 137133, 154175]
+			}, {
+				name: '中年',
+				data: [24916, 24064, 29742, 29851, 32490, 30282, 38121, 40434]
+			}, {
+				name: '少年',
+				data: [11744, 17722, 16005, 19771, 20185, 24377, 32147, 39387]
+			}, {
+				name: '其他',
+				data: [12908, 5948, 8105, 11248, 8989, 11816, 18274, 18111]
+			}],
+			responsive: {
+				rules: [{
+					condition: {
+						maxWidth: 500
+					},
+					chartOptions: {
+						legend: {
+							layout: 'horizontal',
+							align: 'center',
+							verticalAlign: 'bottom'
+						}
+					}
+				}]
+			}
+		});
+		var chart = Highcharts.chart('container1',{
+			chart: {
+				type: 'column',
+				margin:[0,0,0,0]
+			},
+			title: {
+				text: '看点资讯月平均浏览量'
+			},
+			subtitle: {
+			},
+			xAxis: {
+				categories: [
+					'一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'
+				],
+				crosshair: true
+			},
+			yAxis: {
+				min: 0,
+				title: {
+					text: '降雨量 (mm)'
+				}
+			},
+			tooltip: {
+				// head + 每个 point + footer 拼接成完整的 table
+				headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+				pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>',
+				footerFormat: '</table>',
+				shared: true,
+				useHTML: true
+			},
+			plotOptions: {
+				column: {
+					borderWidth: 5
+				}
+			},
+			series: [{
+				name: '',
+				data: [49.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4]
+			}, {
+			// 	name: '纽约',
+			// 	data: [83.6, 78.8, 98.5, 93.4, 106.0, 84.5, 105.0, 104.3, 91.2, 83.5, 106.6, 92.3]
+			// }, {
+			// 	name: '伦敦',
+			// 	data: [48.9, 38.8, 39.3, 41.4, 47.0, 48.3, 59.0, 59.6, 52.4, 65.2, 59.3, 51.2]
+			// }, {
+			// 	name: '柏林',
+			// 	data: [42.4, 33.2, 34.5, 39.7, 52.6, 75.5, 57.4, 60.4, 47.6, 39.1, 46.8, 51.1]
+			}]
+		});
+		var chart = Highcharts.chart('container2', {
+			chart: {
+				spacing : [40, 0 , 40, 0],
+				margin:[0,0,0,0]
+			},
+			title: {
+				floating:true,
+				text: ''
+			},
+			tooltip: {
+				pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+			},
+			plotOptions: {
+				pie: {
+					allowPointSelect: true,
+					cursor: 'pointer',
+					dataLabels: {
+						enabled: true,
+						format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+						style: {
+							color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+						}
+					},
+					point: {
+						events: {
+							mouseOver: function(e) {  // 鼠标滑过时动态更新标题
+								// 标题更新函数，API 地址：https://api.hcharts.cn/highcharts#Chart.setTitle
+								chart.setTitle({
+									text: e.target.name+ '\t'+ e.target.y + ' %'
+								});
+							}
+							//, 
+							// click: function(e) { // 同样的可以在点击事件里处理
+							//     chart.setTitle({
+							//         text: e.point.name+ '\t'+ e.point.y + ' %'
+							//     });
+							// }
+						}
+					},
+				}
+			},
+			series: [{
+				type: 'pie',
+				innerSize: '80%',
+				name: '市场份额',
+				data: [
+					{name:'',   y: 45.0, url : 'http://bbs.hcharts.cn'},
+					['',       26.8],
+					{
+						name: 'Chrome',
+						y: 12.8,
+						sliced: true,
+						selected: true,
+						url: 'http://www.hcharts.cn'
+					},
+					['',    8.5],
+					['',     6.2],
+					['',   0.7]
+				]
+			}]
+		}, function(c) { // 图表初始化完毕后的会掉函数
+			// 环形图圆心
+			var centerY = c.series[0].center[1],
+				titleHeight = parseInt(c.title.styles.fontSize);
+			// 动态设置标题位置
+			c.setTitle({
+				y:centerY + titleHeight/2
+			});
+		});
+	</script>
+</div>
+	

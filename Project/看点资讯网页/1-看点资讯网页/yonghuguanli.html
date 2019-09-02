@@ -1,0 +1,234 @@
+<div>
+	<div class="user">
+		<div class="btns-div form-inline container">
+			<button type="button" class="btn btn-success" id="to-add">新增</button>
+		</div>
+		<div class="list-user">
+			<ul>
+				<li>				
+					<div class="picture">
+						<div>
+							<img class="picture" src="./images/head.jpg" alt=""/>
+						</div>				
+					</div>
+					<div class="form">
+						<div>
+							<div class="form-left">用户名</div>
+							<div class="form-right">zhangsan</div>
+						</div>
+						<div>
+							<div class="form-left">真实姓名</div>
+							<div class="form-right">张三</div>
+						</div>
+						<div>
+							<div class="form-left">注册时间</div>
+							<div class="form-right">2017-2-17 13:14:55</div>
+						</div>
+						<div>
+							<div class="form-left">email</div>
+							<div class="form-right">zhangsan@qq.com</div>
+						</div>
+						<div class="switch">
+						    <div class="form-left">状态</div>
+						    <div class="onoff">
+						    	<div>
+						    		<div class="onoff-1">ON</div>
+						    		<div class="onoff-2">OFF</div>
+						    	</div>
+						    </div>
+						</div>
+					</div>			
+				</li>
+				<li></li>
+				<li></li>
+			</ul>
+		</div>
+		<div class="modal fade" id="myModal">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button class="btn btn-default close" data-dismiss="modal">&times;</button>
+						<span class="modal-title">添加用户</span>
+					</div>
+					<div class="modal-body">
+						<form action="" class="form-horizontal">
+							<div class="form-group">
+								<label for="username" class="col-md-2 control-label width">用户名：</label>
+								<div class="col-sm-9">
+									<input id="username" type="text" class="form-control">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="password" class="col-md-2 control-label width">密码：</label>
+								<div class="col-sm-9">
+									<input id="password" type="password" class="form-control">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="password" class="col-md-2 control-label width">确认密码：</label>
+								<div class="col-sm-9">
+									<input id="rightpassword" type="password" class="form-control">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="username" class="col-md-2 control-label width">真实姓名：</label>
+								<div class="col-sm-9">
+									<input id="rightusername" type="text" class="form-control">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="username" class="col-md-2 control-label width">邮箱：</label>
+								<div class="col-sm-9">
+									<input id="username" type="email" class="form-control">
+								</div>
+							</div>
+						</form>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-default" data-dismiss="modal">取消</button>
+						<button class="btn btn-primary" id="to-save">保存</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script>
+		 //获取所有数据
+	    findAllUser();
+		function findAllUser(){
+			myAjax('/manager/user/findAllUser','get',null,function(res){
+				// console.log(res.data);
+				//遍历数据，追加到tbody
+				var str='';
+				if(res.data&&res.data.length>0){
+					res.data.forEach(function(item){
+						// console.log(item.comment);
+					// var check=item.enabled;
+					// console.log(check);
+					// $('#'+item.id).attr('checked',item.enabled);
+			     	str+= `
+						<li>				
+							<div class="picture">
+								<div>
+									<img class="picture" src="./images/head.jpg" alt=""/>
+								</div>				
+							</div>
+							<div class="form">
+								<div>
+									<div class="form-left">用户名</div>
+									<div class="form-right">`+item.username+`</div>
+								</div>
+								<div>
+									<div class="form-left">真实姓名</div>
+									<div class="form-right">`+item.nickname+`</div>
+								</div>
+								<div>
+									<div class="form-left">注册时间</div>
+									<div class="form-right">`+item.regTime+`</div>
+								</div>
+								<div>
+									<div class="form-left">email</div>
+									<div class="form-right">`+item.email+`</div>
+								</div>
+								<div class="switch">
+								    <div class="form-left">状态</div>
+								    <div class="onoff">  
+										<div>							    		
+								    		<div class="onoff-1">ON</div>	    	
+								    		<div class="onoff-2">OFF</div>
+								    		<input calss="checkbox" id="`+item.id+`"type="checkbox"/>
+							    	    </div>									   	
+								    </div>
+								</div>
+							</div>			
+						</li>
+						`;
+					// $('.category-manage tbody').append(str);
+					// console.log($str);
+					});
+					
+					$('.list-user ul').html(str);
+					// console.log();
+					for(var i=0;i<res.data.length;i++){
+						$("#"+res.data[i].id).attr('checked',res.data[i].enabled);
+						if($("#"+res.data[i].id).prop('checked')===false){
+							console.log($("#"+res.data[i].id).prop('checked'),'------');
+							$("#"+res.data[i].id).parent().css({
+								right:'0px'
+							});
+						}
+						else{
+							console.log($("#"+res.data[i].id).prop('checked'),'*****');
+							$("#"+res.data[i].id).parent().css({
+								right:'-40px'
+							});
+						}
+					}								
+				}
+			},function(error){
+				console.log(error); 
+			});	
+		}
+
+
+		//新增数据
+		//保存
+		function saveOrUpdateUser(obj){
+			// console.log(obj);
+			myAjax('/manager/user/saveOrUpdateUser','post',obj,function(res){
+			    findAllUser();
+		    },function(error){
+			    console.log('失败了');
+		    })
+		}
+		$('.right-content').on('click','#to-save',function(event){
+			// 获取数据，封装成对象，传递给后台
+			var username = $('.modal [type=text]').val();
+			var password = $('.modal [type=password]').val();
+			var rightpassword = $('.modal [id=rightpassword]').val();
+			var rightusername = $('.modal [id=rightusername]').val();
+			var email = $('.modal [type=email]').val();
+			var prop=$('.modal input[type=checkbox]').prop('checked');
+			console.log(username,password,rightpassword,rightusername,email);
+			if(username&&password&&rightpassword&&rightusername&&email){
+				if(password!==rightpassword){
+					alert('确认密码是否一致');
+				}
+				else{
+					saveOrUpdateUser({
+						username:username,
+						password:password,
+						nickname:rightusername,
+						email:email,
+						enable:prop
+					});
+				}
+				$('#myModal').modal('hide');
+			}else{
+				alert('请输入完整的信息');
+			}
+		});
+		//新增按钮
+		$('.right-content').on('click','#to-add',function(){
+			$('.modal [type=text],.modal [type=password],.modal [id=rightpassword],.modal [id=rightusername],.modal [type=email]').val(null);
+			$('.modal input[type=checkbox]').attr('checked',false);
+			$('#myModal').modal('show');
+		});
+
+		//修改按钮
+		$('.right-content').on('click','.onoff>div',function(){
+			if($(this).css('right')==='0px'){
+				$(this).animate({right:'-40px'},500);				
+			}
+			else{
+				$(this).animate({right:'0px'},500);
+			}
+			// console.log($('.onoff>div').children('input').prop('checked'));
+			
+
+		});
+
+	</script>
+</div>
+
+
